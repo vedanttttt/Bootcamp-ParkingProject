@@ -13,6 +13,14 @@ public class ParkingLot {
         this.observers.add(owner);
     }
 
+    public boolean removeIfParked(Car car){
+        if(set.contains(car)){
+            set.remove(car);
+            return true;
+        }
+        return false;
+    }
+
     public int fixedCapacity(){
         return fixedCapacity;
     }
@@ -34,15 +42,13 @@ public class ParkingLot {
     }
 
     public void unPark(Car car) throws CarIsNotParkedException {
-        if(set.contains(car)){
-            set.remove(car);
+        if (removeIfParked(car)) {
             if(set.size()==fixedCapacity-1){
                 observers.forEach(Observers::notifyWhenAvailable);
             }
+            return ;
         }
-        else{
-            throw new CarIsNotParkedException();
-        }
+        throw new CarIsNotParkedException();
     }
 
     public boolean isCarParked(Car car) {

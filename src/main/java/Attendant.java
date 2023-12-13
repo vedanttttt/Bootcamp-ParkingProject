@@ -1,13 +1,31 @@
+import java.util.HashSet;
+import java.util.Set;
+
 public class Attendant {
-    private ParkingLot parkingLot;
-    public Attendant(ParkingLot parkingLot){
-        this.parkingLot = parkingLot;
+    private Set<ParkingLot> set;
+    public Attendant(){
+        set = new HashSet<>();
     }
     public void parkTheCar(Car car) throws ParkingLotFullException, CarAlreadyParkedException {
-        parkingLot.park(car);
+        for(ParkingLot parkingLot: set) {
+            if(parkingLot.hasSpace()){
+                parkingLot.park(car);
+                return;
+            }
+        }
+        throw new ParkingLotFullException();
     }
 
     public void unParkTheCar(Car car) throws CarIsNotParkedException {
-        parkingLot.unPark(car);
+        for(ParkingLot parkingLot: set) {
+            if(parkingLot.removeIfParked(car)){
+                return ;
+            }
+        }
+        throw new CarIsNotParkedException();
+    }
+
+    public void register(ParkingLot parkingLot) {
+        set.add(parkingLot);
     }
 }
